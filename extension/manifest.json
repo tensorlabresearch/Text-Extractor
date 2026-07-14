@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Text Extractor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Extract text from PDFs and images entirely on this device.",
   "minimum_chrome_version": "116",
   "permissions": [
