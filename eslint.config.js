@@ -1,0 +1,111 @@
+import js from "@eslint/js";
+
+export default [
+  {
+    ignores: [
+      "node_modules/",
+      "coverage/",
+      "extension/lib/vendor/**",
+      "build/",
+    ],
+  },
+  js.configs.recommended,
+  {
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: "module",
+      globals: {
+        chrome: "readonly",
+        window: "readonly",
+        document: "readonly",
+        navigator: "readonly",
+        console: "readonly",
+        URL: "readonly",
+        Blob: "readonly",
+        Worker: "readonly",
+        HTMLElement: "readonly",
+        File: "readonly",
+        FileReader: "readonly",
+        fetch: "readonly",
+        indexedDB: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        requestAnimationFrame: "readonly",
+        cancelAnimationFrame: "readonly",
+        confirm: "readonly",
+        CSS: "readonly",
+        Uint8Array: "readonly",
+        Float32Array: "readonly",
+        DataView: "readonly",
+        TextEncoder: "readonly",
+        TextDecoder: "readonly",
+        AbortController: "readonly",
+        self: "readonly",
+        Request: "readonly",
+        Response: "readonly",
+        process: "readonly",
+        ImageData: "readonly",
+        ImageBitmap: "readonly",
+        OffscreenCanvas: "readonly",
+        createImageBitmap: "readonly",
+        crypto: "readonly",
+        DOMMatrix: "readonly",
+      },
+    },
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrors: "none" }],
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      "no-constant-condition": ["error", { checkLoops: false }],
+      "no-useless-escape": "off",
+      "no-sparse-arrays": "off",
+      "no-control-regex": "off",
+    },
+  },
+  {
+    files: ["extension/workers/**/*.js"],
+    languageOptions: {
+      globals: {
+        self: "readonly",
+        onmessage: "writable",
+        onerror: "writable",
+      },
+    },
+  },
+  {
+    files: ["tests/**/*.test.{js,mjs}", "tests/helpers/**/*.js"],
+    languageOptions: {
+      globals: {
+        globalThis: "readonly",
+        vi: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+        self: "readonly",
+      },
+    },
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrors: "none" }],
+      "no-empty": ["error", { allowEmptyCatch: true }],
+    },
+  },
+  {
+    files: ["e2e/**/*.js", "playwright.config.js", "vitest.config.js", "scripts/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        Buffer: "readonly",
+      },
+    },
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrors: "none" }],
+      "no-empty-pattern": "off",
+    },
+  },
+];

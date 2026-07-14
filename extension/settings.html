@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local PDF OCR — Settings</title>
+  <link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+  <div id="settings">
+    <h1>Settings</h1>
+    <form id="settings-form">
+      <fieldset>
+        <legend>Engine</legend>
+        <label>
+          Execution engine
+          <select id="setting-engine">
+            <option value="auto">Auto</option>
+            <option value="webgpu">WebGPU</option>
+            <option value="wasm">WASM</option>
+          </select>
+        </label>
+        <label>
+          CPU threads
+          <select id="setting-numThreads">
+            <option value="auto">Automatic</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Detection</legend>
+        <label>
+          Detector threshold
+          <input type="number" id="setting-detectorThreshold" step="0.05" min="0" max="1" />
+        </label>
+        <label>
+          Box threshold
+          <input type="number" id="setting-boxThreshold" step="0.05" min="0" max="1" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Export</legend>
+        <label>
+          Default export format
+          <select id="setting-exportFormat">
+            <option value="txt">TXT</option>
+            <option value="markdown">Markdown</option>
+            <option value="json">JSON</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Recovery</legend>
+        <label>
+          <input type="checkbox" id="setting-restoreSessions" />
+          Restore unfinished OCR sessions (off by default)
+        </label>
+      </fieldset>
+
+      <button type="submit">Save</button>
+    </form>
+  </div>
+  <script type="module" src="settings.js"></script>
+</body>
+</html>

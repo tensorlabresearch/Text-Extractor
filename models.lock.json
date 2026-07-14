@@ -1,0 +1,49 @@
+{
+  "trocr-small-printed": {
+    "repository": "https://huggingface.co/Xenova/trocr-small-printed",
+    "revision": "<exact-commit-to-be-pinned>",
+    "license": "Apache-2.0",
+    "files": {
+      "onnx/encoder_model_quantized.onnx": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "onnx/decoder_model_merged_quantized.onnx": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "config.json": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "generation_config.json": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "preprocessor_config.json": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "tokenizer.json": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "tokenizer_config.json": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "sentencepiece.bpe.model": {
+        "sha256": "<hash-to-be-verified>"
+      },
+      "special_tokens_map.json": {
+        "sha256": "<hash-to-be-verified>"
+      }
+    }
+  },
+  "ppocrv5-mobile-det": {
+    "repository": "https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_det_onnx",
+    "revision": "e6f4fa85f00e168c862bc462aebca69eef9b3d3d",
+    "license": "Apache-2.0",
+    "files": {
+      "inference.onnx": {
+        "sha256": "a431985659dc921974177a95adcfbb90fd9e51989a5e04d70d0b75f597b6e61d"
+      },
+      "inference.yml": {
+        "sha256": "<hash-to-be-verified>"
+      }
+    }
+  }
+}

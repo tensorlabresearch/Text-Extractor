@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local PDF OCR</title>
+  <link rel="stylesheet" href="workspace.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="toolbar">
+      <button id="btn-open" title="Open File">Open File</button>
+      <button id="btn-paste" title="Paste Image">Paste Image</button>
+      <input id="page-range" type="text" placeholder="Pages (e.g. 1-5, 8)" />
+      <select id="select-mode" title="Mode">
+        <option value="auto">Auto</option>
+        <option value="native">Native Text</option>
+        <option value="forced-ocr">Force OCR</option>
+      </select>
+      <select id="select-quality" title="Quality">
+        <option value="fast">Fast</option>
+        <option value="document" selected>Document</option>
+        <option value="high-res">High Resolution</option>
+      </select>
+      <select id="select-engine" title="Engine">
+        <option value="auto" selected>Auto</option>
+        <option value="webgpu">WebGPU</option>
+        <option value="wasm">WASM</option>
+      </select>
+      <button id="btn-rotate" title="Rotate">Rotate</button>
+      <button id="btn-start" title="Start OCR">Start</button>
+      <button id="btn-cancel" title="Cancel" disabled>Cancel</button>
+      <button id="btn-copy" title="Copy Text">Copy</button>
+      <button id="btn-export" title="Export">Export</button>
+      <button id="btn-settings" title="Settings">Settings</button>
+    </header>
+
+    <main id="workspace">
+      <aside id="page-list">
+        <h2>Pages</h2>
+        <ul id="pages"></ul>
+      </aside>
+
+      <section id="page-viewer">
+        <canvas id="page-canvas"></canvas>
+        <svg id="overlay" xmlns="http://www.w3.org/2000/svg"></svg>
+      </section>
+
+      <section id="result-editor">
+        <h2>Extracted Text</h2>
+        <div id="lines"></div>
+      </section>
+    </main>
+
+    <footer id="progress">
+      <div id="progress-text">Ready</div>
+      <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+      </div>
+    </footer>
+
+    <details id="diagnostics">
+      <summary>Diagnostics</summary>
+      <pre id="diagnostics-content"></pre>
+    </details>
+  </div>
+
+  <script type="module" src="workspace.js"></script>
+</body>
+</html>

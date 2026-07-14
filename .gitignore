@@ -1,0 +1,14 @@
+node_modules/
+coverage/
+*.zip
+.DS_Store
+.beads/
+.runtime/
+.wasm-build/
+.claude/
+.opencode/
+.lean-ctx/
+CLAUDE.md
+build/
+test-results/
+playwright-report/
