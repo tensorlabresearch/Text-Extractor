@@ -41,8 +41,6 @@ export function createWorkerClient() {
   function handleWorkerMessage(event) {
     const msg = event.data;
     if (!msg || !msg.type) return;
-    // Ignore late results from cancelled or superseded jobs
-    if (msg.jobId && currentJobId && msg.jobId !== currentJobId) return;
     emit(msg.type, msg);
   }
 
@@ -135,8 +133,78 @@ export function createWorkerClient() {
  * @param {Object} message - Incoming request message.
  * @param {Function} postMessage - Function to send responses back.
  */
+let _detector = null;
+let _recognizer = null;
+let _cancelled = false;
+
 export async function handleMessage(message, postMessage) {
   if (!message || !message.type) return;
-  // TODO: implement worker-side handling in Phase 0 spike
-  postMessage({ type: RESPONSE.WORKER_READY, jobId: message.jobId || "" });
+
+  const { type, jobId } = message;
+
+  switch (type) {
+    case REQUEST.INIT:
+      postMessage({ type: RESPONSE.WORKER_READY, jobId });
+      break;
+
+    case REQUEST.LOAD_MODELS: {
+      try {
+        const { Ppocrv5Detector } = await import("./detector/ppocrv5-detector.js");
+        const { TrocrRecognizer } = await import("./recognizer/trocr-recognizer.js");
+
+        _detector = new Ppocrv5Detector();
+        await _detector.load({
+          modelPath: chrome.runtime.getURL("models/ppocrv5-mobile-det/inference.onnx"),
+          executionProvider: message.engine || "auto",
+        });
+        postMessage({ type: RESPONSE.ENGINE_SELECTED, jobId, engine: _detector.engine });
+
+        _recognizer = new TrocrRecognizer();
+        await _recognizer.load({ engine: message.engine || "auto" });
+        postMessage({ type: RESPONSE.MODEL_READY, jobId, detectorEngine: _detector.engine, recognizerEngine: _recognizer.engine });
+      } catch (err) {
+        postMessage({ type: RESPONSE.WORKER_ERROR, jobId, error: String(err?.message || err) });
+      }
+      break;
+    }
+
+    case REQUEST.OCR_IMAGE: {
+      if (!_detector || !_recognizer) {
+        postMessage({ type: RESPONSE.WORKER_ERROR, jobId, error: "Models not loaded" });
+        break;
+      }
+      _cancelled = false;
+      try {
+        const { runPagePipeline } = await import("./pipeline/page-pipeline.js");
+        const result = await runPagePipeline({
+          detector: _detector,
+          recognizer: _recognizer,
+          image: message.image,
+          options: { ...message, pageNumber: 1, source: "ocr" },
+          signal: { aborted: _cancelled },
+        });
+        postMessage({ type: RESPONSE.PAGE_DONE, jobId, result });
+      } catch (err) {
+        if (_cancelled) {
+          postMessage({ type: RESPONSE.JOB_CANCELLED, jobId });
+        } else {
+          postMessage({ type: RESPONSE.WORKER_ERROR, jobId, error: String(err?.message || err) });
+        }
+      }
+      break;
+    }
+
+    case REQUEST.CANCEL_JOB:
+      _cancelled = true;
+      postMessage({ type: RESPONSE.JOB_CANCELLED, jobId });
+      break;
+
+    case REQUEST.DISPOSE_MODELS:
+      if (_detector) { try { await _detector.dispose(); } catch (_) {} _detector = null; }
+      if (_recognizer) { try { await _recognizer.dispose(); } catch (_) {} _recognizer = null; }
+      break;
+
+    default:
+      break;
+  }
 }

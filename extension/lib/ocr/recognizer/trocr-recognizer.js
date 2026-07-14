@@ -6,47 +6,63 @@
 import { RecognizerBackend } from "./recognizer-backend.js";
 
 export class TrocrRecognizer extends RecognizerBackend {
-  /** @type {any|null} */
   _pipeline = null;
-  /** @type {"webgpu"|"wasm"|null} */
   _engine = null;
 
-  /**
-   * @param {Object} options
-   * @param {string} options.modelPath - Extension URL to model directory.
-   * @param {"auto"|"webgpu"|"wasm"} [options.engine]
-   */
-  async load(_options) {
-    // TODO: implement in Phase 4
-    //
-    // import { env, pipeline } from "../vendor/transformers/transformers.js";
-    // env.allowRemoteModels = false;
-    // env.allowLocalModels = true;
-    // env.useBrowserCache = false;
-    // env.localModelPath = chrome.runtime.getURL("models/");
-    // env.backends.onnx.wasm.wasmPaths = chrome.runtime.getURL("lib/vendor/onnxruntime/");
-    //
-    // this._pipeline = await pipeline("image-to-text", "trocr-small-printed", {
-    //   dtype: "q8",
-    //   device: options.engine === "wasm" ? "cpu" : "webgpu",
-    // });
-    throw new Error("TrOCR recognizer not yet implemented — Phase 4");
+  async load(options) {
+    const { env, pipeline } = await import("../../vendor/transformers/transformers.web.min.js");
+
+    env.allowRemoteModels = false;
+    env.allowLocalModels = true;
+    env.useBrowserCache = false;
+    env.localModelPath = chrome.runtime.getURL("models/");
+    env.backends.onnx.wasm.wasmPaths = chrome.runtime.getURL("lib/vendor/transformers/wasm/");
+
+    const device = options.engine === "wasm" ? "cpu" : "webgpu";
+    const dtype = "q8";
+
+    try {
+      this._pipeline = await pipeline("image-to-text", "trocr-small-printed", {
+        dtype,
+        device,
+      });
+      this._engine = options.engine || "webgpu";
+    } catch (err) {
+      if (device === "webgpu") {
+        this._pipeline = await pipeline("image-to-text", "trocr-small-printed", {
+          dtype,
+          device: "cpu",
+        });
+        this._engine = "wasm";
+      } else {
+        throw err;
+      }
+    }
   }
 
-  /**
-   * @param {Array<ImageBitmap|ImageData>} crops
-   * @param {Object} options
-   * @param {AbortSignal} signal
-   * @returns {Promise<import("./recognizer-backend.js").RecognitionResult[]>}
-   */
-  async recognize(crops, options, signal) {
+  async recognize(crops, _options, signal) {
     if (!this._pipeline) throw new Error("Recognizer not loaded");
 
     const results = [];
     for (const crop of crops) {
       if (signal?.aborted) throw new Error("Aborted");
 
-      const output = await this._pipeline(crop, {
+      let imageData;
+      if (crop instanceof ImageData) {
+        imageData = crop;
+      } else if (crop instanceof ImageBitmap) {
+        const canvas = new OffscreenCanvas(crop.width, crop.height);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(crop, 0, 0);
+        imageData = ctx.getImageData(0, 0, crop.width, crop.height);
+      } else if (crop instanceof OffscreenCanvas) {
+        const ctx = crop.getContext("2d");
+        imageData = ctx.getImageData(0, 0, crop.width, crop.height);
+      } else {
+        throw new Error("Unsupported crop type");
+      }
+
+      const output = await this._pipeline(imageData, {
         max_new_tokens: 96,
         num_beams: 1,
         do_sample: false,
@@ -54,12 +70,16 @@ export class TrocrRecognizer extends RecognizerBackend {
 
       results.push({
         text: String(output?.[0]?.generated_text || ""),
-        score: null, // Do not invent a confidence score
+        score: null,
         diagnostics: { engine: this._engine },
       });
     }
 
     return results;
+  }
+
+  get engine() {
+    return this._engine;
   }
 
   async dispose() {

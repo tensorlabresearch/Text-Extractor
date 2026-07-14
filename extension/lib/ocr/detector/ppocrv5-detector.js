@@ -4,33 +4,80 @@
 
 import { DetectorBackend } from "./detector-backend.js";
 import { preprocessForDetector } from "../../image/preprocessing.js";
+import { dbPostprocess } from "./db-postprocess.js";
 
 export class Ppocrv5Detector extends DetectorBackend {
-  /** @type {import("onnxruntime-web").InferenceSession|null} */
   _session = null;
+  _engine = null;
+  _ort = null;
 
-  /**
-   * @param {Object} options
-   * @param {string} options.modelPath - Extension URL to inference.onnx
-   * @param {"webgpu"|"wasm"} [options.executionProvider]
-   */
-  async load(_options) {
-    // TODO: implement in Phase 3
-    // Load ONNX session with the specified execution provider
-    throw new Error("PP-OCRv5 detector not yet implemented — Phase 3");
+  async load(options) {
+    const ort = await import("../../vendor/transformers/ort.webgpu.bundle.min.mjs");
+    this._ort = ort;
+
+    const modelUrl = options.modelPath;
+    if (!modelUrl) throw new Error("modelPath required");
+
+    const tryProviders = options.executionProvider === "wasm"
+      ? ["wasm"]
+      : options.executionProvider === "webgpu"
+        ? ["webgpu"]
+        : ["webgpu", "wasm"];
+
+    let lastError = null;
+    for (const provider of tryProviders) {
+      try {
+        const session = await ort.InferenceSession.create(modelUrl, {
+          executionProviders: provider === "webgpu"
+            ? [{ name: "webgpu" }]
+            : [{ name: "wasm", threads: options.numThreads || 2 }],
+        });
+        this._session = session;
+        this._engine = provider;
+        return;
+      } catch (err) {
+        lastError = err;
+      }
+    }
+    throw new Error(`Failed to load detector: ${lastError}`);
   }
 
-  /**
-   * @param {ImageData|ImageBitmap|OffscreenCanvas} image
-   * @param {Object} options
-   * @param {AbortSignal} signal
-   * @returns {Promise<import("./detector-backend.js").TextRegion[]>}
-   */
   async detect(image, _options, _signal) {
     if (!this._session) throw new Error("Detector not loaded");
-    const _preprocessed = preprocessForDetector(image);
-    // TODO: run inference and postprocess in Phase 3
-    throw new Error("Detection not yet implemented — Phase 3");
+
+    const { tensor, width, height, origWidth, origHeight } = preprocessForDetector(image);
+
+    const inputName = this._session.inputNames[0];
+    const tensor3d = new this._ort.Tensor("float32", tensor, [1, 3, height, width]);
+    const feeds = { [inputName]: tensor3d };
+
+    const results = await this._session.run(feeds);
+    const outputName = this._session.outputNames[0];
+    const output = results[outputName];
+    const probMap = output.data;
+
+    const outH = output.dims[2];
+    const outW = output.dims[3];
+
+    const detections = dbPostprocess(
+      probMap,
+      outW,
+      outH,
+      origWidth,
+      origHeight
+    );
+
+    return detections.map((det, i) => ({
+      id: `region-${i}`,
+      polygon: det.polygon,
+      boundingBox: det.boundingBox,
+      detectorScore: det.score,
+      estimatedAngle: 0,
+    }));
+  }
+
+  get engine() {
+    return this._engine;
   }
 
   async dispose() {

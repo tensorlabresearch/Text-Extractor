@@ -9,39 +9,37 @@
 
 export function createPdfController() {
   let pdfDocument = null;
+  let pdfjsLib = null;
+
+  async function ensurePdfjs() {
+    if (pdfjsLib) return pdfjsLib;
+    pdfjsLib = await import("../vendor/pdfjs/pdf.min.mjs");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL("lib/vendor/pdfjs/pdf.worker.min.mjs");
+    return pdfjsLib;
+  }
 
   return {
-    /**
-     * Load a PDF from bytes.
-     * @param {ArrayBuffer} bytes
-     * @param {string} [password]
-     * @returns {Promise<{ pageCount: number }>}
-     */
-    async open(_bytes, _password) {
-      // TODO: implement with vendored PDF.js in Phase 2
-      throw new Error("PDF.js not yet vendored — Phase 2");
+    async open(bytes, password) {
+      const lib = await ensurePdfjs();
+      const loadingTask = lib.getDocument({
+        data: bytes,
+        password: password || undefined,
+        useWorkerFetch: false,
+        isEvalSupported: false,
+      });
+      pdfDocument = await loadingTask.promise;
+      return { pageCount: pdfDocument.numPages };
     },
 
-    /**
-     * Get page proxy.
-     * @param {number} pageNumber - 1-based page number.
-     */
     async getPage(pageNumber) {
       if (!pdfDocument) throw new Error("No document open");
       return pdfDocument.getPage(pageNumber);
     },
 
-    /**
-     * Get page count.
-     * @returns {number}
-     */
     get pageCount() {
       return pdfDocument?.numPages ?? 0;
     },
 
-    /**
-     * Close and destroy the PDF document, releasing memory.
-     */
     async close() {
       if (pdfDocument) {
         try { await pdfDocument.destroy(); } catch (_) {}
