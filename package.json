@@ -1,7 +1,7 @@
 {
   "private": true,
   "type": "module",
-  "name": "local-pdf-ocr",
+  "name": "text-extractor",
   "version": "0.1.0",
   "scripts": {
     "test": "vitest run",

@@ -1,4 +1,4 @@
-// Background service worker for Local PDF OCR.
+// Background service worker for Text Extractor.
 //
 // Remains thin: opens or focuses the workspace tab, initializes default
 // settings in chrome.storage.local, and optionally handles download requests.

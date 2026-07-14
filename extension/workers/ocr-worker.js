@@ -1,4 +1,4 @@
-// OCR module worker for Local PDF OCR.
+// OCR module worker for Text Extractor.
 //
 // Contains both the PP-OCR detector and TrOCR recognizer in a single worker
 // to avoid transferring line crops between workers, avoid multiple ONNX

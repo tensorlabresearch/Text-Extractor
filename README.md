@@ -1,12 +1,12 @@
-# Local PDF OCR
+# Text Extractor
 
-![Local PDF OCR Logo](extension/icons/icon128.png)
+![Text Extractor Logo](extension/icons/icon128.png)
 
 Extract text from PDFs and images entirely on this device. Local-first Chrome
 extension with on-device OCR — no network requests, no telemetry, no cloud
 fallback.
 
-Local PDF OCR uses [PDF.js](https://mozilla.github.io/pdf.js/) for native text
+Text Extractor uses [PDF.js](https://mozilla.github.io/pdf.js/) for native text
 extraction and page rendering, [PP-OCRv5](https://github.com/PaddlePaddle/PaddleOCR)
 for text detection via [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/),
 and [TrOCR](https://huggingface.co/microsoft/trocr-small-printed) for text
@@ -21,8 +21,8 @@ Install from the Chrome Web Store once the listing is live.
 ### Local development install
 
 1. Grab the latest release zip:
-   <https://github.com/tensorlabresearch/Local-PDF-OCR/releases/latest>
-   (look for `local-pdf-ocr-vX.Y.Z.zip`).
+   <https://github.com/tensorlabresearch/Text-Extractor/releases/latest>
+   (look for `text-extractor-vX.Y.Z.zip`).
 2. Unzip it to a folder you'll keep around — the browser loads the unpacked
    directory directly.
 3. Open the extensions page:
@@ -30,7 +30,7 @@ Install from the Chrome Web Store once the listing is live.
    - Brave:  `brave://extensions`
 4. Enable **Developer mode** (top-right toggle).
 5. Click **Load unpacked** and pick the unzipped folder.
-6. Click the Local PDF OCR toolbar icon. The workspace opens in its own tab.
+6. Click the Text Extractor toolbar icon. The workspace opens in its own tab.
 
 First use downloads and caches the OCR models (~74 MB) locally. After that,
 the extension works fully offline.

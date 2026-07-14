@@ -1,4 +1,4 @@
-// Settings page for Local PDF OCR.
+// Settings page for Text Extractor.
 
 const FIELDS = [
   "engine",

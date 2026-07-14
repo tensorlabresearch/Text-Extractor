@@ -1,4 +1,4 @@
-// Workspace entry point for Local PDF OCR.
+// Workspace entry point for Text Extractor.
 //
 // Owns the document session, page queue, OCR results, user edits,
 // export state, and worker lifecycle. The service worker never holds

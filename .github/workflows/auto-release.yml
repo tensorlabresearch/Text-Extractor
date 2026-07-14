@@ -129,7 +129,7 @@ jobs:
         run: |
           set -euo pipefail
           cd extension
-          ZIP="../local-pdf-ocr-v${NEW_VERSION}.zip"
+          ZIP="../text-extractor-v${NEW_VERSION}.zip"
           zip -r "$ZIP" . \
             -x 'node_modules/*' \
             -x '.DS_Store' \
@@ -143,5 +143,5 @@ jobs:
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: v${{ steps.version.outputs.version }}
-          files: local-pdf-ocr-v${{ steps.version.outputs.version }}.zip
+          files: text-extractor-v${{ steps.version.outputs.version }}.zip
           generate_release_notes: true

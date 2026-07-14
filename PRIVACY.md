@@ -1,11 +1,11 @@
 # Privacy Policy
 
-Local PDF OCR is a local-first Chrome extension. Your documents never leave
+Text Extractor is a local-first Chrome extension. Your documents never leave
 your device.
 
 ## Data collection
 
-Local PDF OCR does **not** collect, transmit, or share any data:
+Text Extractor does **not** collect, transmit, or share any data:
 
 - **No network requests.** The extension makes zero HTTP/HTTPS requests at
   runtime. All processing happens on-device.
@@ -44,4 +44,4 @@ permissions are requested.
 ## Open source
 
 The entire source code is available at
-<https://github.com/tensorlabresearch/Local-PDF-OCR>.
+<https://github.com/tensorlabresearch/Text-Extractor>.
