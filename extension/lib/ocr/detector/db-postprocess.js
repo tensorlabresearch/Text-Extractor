@@ -218,10 +218,10 @@ function minAreaRect(contour) {
       const cy = y1 + ay * (minProjA + maxProjA) / 2 + py * (minProjP + maxProjP) / 2;
 
       const corners = [
-        [cx + ax * minProjA + px * minProjP, cy + ay * minProjA + py * minProjP],
-        [cx + ax * maxProjA + px * minProjP, cy + ay * maxProjA + py * minProjP],
-        [cx + ax * maxProjA + px * maxProjP, cy + ay * maxProjA + py * maxProjP],
-        [cx + ax * minProjA + px * maxProjP, cy + ay * minProjA + py * maxProjP],
+        [x1 + ax * minProjA + px * minProjP, y1 + ay * minProjA + py * minProjP],
+        [x1 + ax * maxProjA + px * minProjP, y1 + ay * maxProjA + py * minProjP],
+        [x1 + ax * maxProjA + px * maxProjP, y1 + ay * maxProjA + py * maxProjP],
+        [x1 + ax * minProjA + px * maxProjP, y1 + ay * minProjA + py * maxProjP],
       ];
 
       bestRect = {

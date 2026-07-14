@@ -15,6 +15,10 @@ export class Ppocrv5Detector extends DetectorBackend {
     const ort = await import("../../vendor/transformers/ort.webgpu.bundle.min.mjs");
     this._ort = ort;
 
+    if (options.wasmPaths) {
+      ort.env.wasm.wasmPaths = options.wasmPaths;
+    }
+
     const modelUrl = options.modelPath;
     if (!modelUrl) throw new Error("modelPath required");
 

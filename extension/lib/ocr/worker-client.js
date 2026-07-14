@@ -61,7 +61,13 @@ export function createWorkerClient() {
     async loadModels(options = {}) {
       if (!worker) throw new Error("Worker not initialized");
       currentJobId = makeJobId();
-      return postAndAwait(REQUEST.LOAD_MODELS, currentJobId, options, RESPONSE.MODEL_READY);
+      const payload = {
+        ...options,
+        detectorModelPath: chrome.runtime.getURL("models/ppocrv5-mobile-det/inference.onnx"),
+        modelsBasePath: chrome.runtime.getURL("models/"),
+        wasmPaths: chrome.runtime.getURL("lib/vendor/transformers/wasm/"),
+      };
+      return postAndAwait(REQUEST.LOAD_MODELS, currentJobId, payload, RESPONSE.MODEL_READY);
     },
 
     async ocrImage(image, options = {}, signal) {
@@ -154,13 +160,18 @@ export async function handleMessage(message, postMessage) {
 
         _detector = new Ppocrv5Detector();
         await _detector.load({
-          modelPath: chrome.runtime.getURL("models/ppocrv5-mobile-det/inference.onnx"),
+          modelPath: message.detectorModelPath,
           executionProvider: message.engine || "auto",
+          wasmPaths: message.wasmPaths,
         });
         postMessage({ type: RESPONSE.ENGINE_SELECTED, jobId, engine: _detector.engine });
 
         _recognizer = new TrocrRecognizer();
-        await _recognizer.load({ engine: message.engine || "auto" });
+        await _recognizer.load({
+          engine: message.engine || "auto",
+          localModelPath: message.modelsBasePath,
+          wasmPaths: message.wasmPaths,
+        });
         postMessage({ type: RESPONSE.MODEL_READY, jobId, detectorEngine: _detector.engine, recognizerEngine: _recognizer.engine });
       } catch (err) {
         postMessage({ type: RESPONSE.WORKER_ERROR, jobId, error: String(err?.message || err) });

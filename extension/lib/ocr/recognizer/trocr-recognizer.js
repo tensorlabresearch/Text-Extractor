@@ -15,8 +15,8 @@ export class TrocrRecognizer extends RecognizerBackend {
     env.allowRemoteModels = false;
     env.allowLocalModels = true;
     env.useBrowserCache = false;
-    env.localModelPath = chrome.runtime.getURL("models/");
-    env.backends.onnx.wasm.wasmPaths = chrome.runtime.getURL("lib/vendor/transformers/wasm/");
+    env.localModelPath = options.localModelPath;
+    env.backends.onnx.wasm.wasmPaths = options.wasmPaths;
 
     const device = options.engine === "wasm" ? "cpu" : "webgpu";
     const dtype = "q8";
@@ -47,22 +47,22 @@ export class TrocrRecognizer extends RecognizerBackend {
     for (const crop of crops) {
       if (signal?.aborted) throw new Error("Aborted");
 
-      let imageData;
-      if (crop instanceof ImageData) {
-        imageData = crop;
+      let canvas;
+      if (crop instanceof OffscreenCanvas) {
+        canvas = crop;
       } else if (crop instanceof ImageBitmap) {
-        const canvas = new OffscreenCanvas(crop.width, crop.height);
+        canvas = new OffscreenCanvas(crop.width, crop.height);
         const ctx = canvas.getContext("2d");
         ctx.drawImage(crop, 0, 0);
-        imageData = ctx.getImageData(0, 0, crop.width, crop.height);
-      } else if (crop instanceof OffscreenCanvas) {
-        const ctx = crop.getContext("2d");
-        imageData = ctx.getImageData(0, 0, crop.width, crop.height);
+      } else if (crop instanceof ImageData) {
+        canvas = new OffscreenCanvas(crop.width, crop.height);
+        const ctx = canvas.getContext("2d");
+        ctx.putImageData(crop, 0, 0);
       } else {
         throw new Error("Unsupported crop type");
       }
 
-      const output = await this._pipeline(imageData, {
+      const output = await this._pipeline(canvas, {
         max_new_tokens: 96,
         num_beams: 1,
         do_sample: false,
