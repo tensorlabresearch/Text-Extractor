@@ -21,7 +21,7 @@ export function polygonArea(polygon) {
  * @param {number} ratio
  * @returns {Array<[number, number]>}
  */
-export function unclipPolygon(polygon, ratio) {
+export function unclipPolygon(polygon, _ratio) {
   // TODO: implement proper offset curve in Phase 3
   // For now, expand bounding box by ratio
   return polygon;
@@ -32,7 +32,7 @@ export function unclipPolygon(polygon, ratio) {
  * @param {Array<[number, number]>} polygon
  * @returns {{ center: [number, number], width: number, height: number, angle: number }}
  */
-export function minAreaRect(polygon) {
+export function minAreaRect(_polygon) {
   // TODO: implement rotating calipers in Phase 3
   throw new Error("minAreaRect not yet implemented — Phase 3");
 }

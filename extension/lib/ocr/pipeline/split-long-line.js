@@ -19,7 +19,7 @@ export function shouldSplit(dimensions) {
  * @param {ImageData} imageData
  * @returns {number[]} - X coordinates of split points.
  */
-export function findSplitPoints(imageData) {
+export function findSplitPoints(_imageData) {
   // TODO: implement vertical projection analysis in Phase 4
   return [];
 }

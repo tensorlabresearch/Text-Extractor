@@ -4,7 +4,7 @@
 import { execSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFile, rm, mkdir, existsSync } from "node:fs/promises";
+import { readFile, rm, mkdir } from "node:fs/promises";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..");

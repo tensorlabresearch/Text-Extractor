@@ -4,7 +4,6 @@
 
 import { DetectorBackend } from "./detector-backend.js";
 import { preprocessForDetector } from "../../image/preprocessing.js";
-import { dbPostprocess } from "./db-postprocess.js";
 
 export class Ppocrv5Detector extends DetectorBackend {
   /** @type {import("onnxruntime-web").InferenceSession|null} */
@@ -15,7 +14,7 @@ export class Ppocrv5Detector extends DetectorBackend {
    * @param {string} options.modelPath - Extension URL to inference.onnx
    * @param {"webgpu"|"wasm"} [options.executionProvider]
    */
-  async load(options) {
+  async load(_options) {
     // TODO: implement in Phase 3
     // Load ONNX session with the specified execution provider
     throw new Error("PP-OCRv5 detector not yet implemented — Phase 3");
@@ -27,9 +26,9 @@ export class Ppocrv5Detector extends DetectorBackend {
    * @param {AbortSignal} signal
    * @returns {Promise<import("./detector-backend.js").TextRegion[]>}
    */
-  async detect(image, options, signal) {
+  async detect(image, _options, _signal) {
     if (!this._session) throw new Error("Detector not loaded");
-    const { tensor, width, height, scale } = preprocessForDetector(image);
+    const _preprocessed = preprocessForDetector(image);
     // TODO: run inference and postprocess in Phase 3
     throw new Error("Detection not yet implemented — Phase 3");
   }

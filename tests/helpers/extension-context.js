@@ -4,26 +4,23 @@
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const EXTENSION_PATH = join(__dirname, '..', 'extension');
+const _EXTENSION_PATH = join(dirname(fileURLToPath(import.meta.url)), '..', 'extension');
 
 /**
  * Launch a persistent Chromium context with the extension loaded.
- * @param {import('@playwright/test').BrowserType} chromium
- * @param {string} [userDataDir]
+ * @param {_chromium} _chromium
+ * @param {_userDataDir} _userDataDir
  * @returns {Promise<import('@playwright/test').BrowserContext>}
  */
-export async function launchExtensionContext(chromium, userDataDir) {
-  // TODO: implement in Phase 1
+export async function launchExtensionContext(_chromium, _userDataDir) {
   throw new Error('Extension context launcher not yet implemented');
 }
 
 /**
  * Find the extension's workspace tab.
- * @param {import('@playwright/test').BrowserContext} context
+ * @param {_context} _context
  * @returns {Promise<import('@playwright/test').Page>}
  */
-export async function findWorkspaceTab(context) {
-  // TODO: implement in Phase 1
+export async function findWorkspaceTab(_context) {
   throw new Error('Workspace tab finder not yet implemented');
 }

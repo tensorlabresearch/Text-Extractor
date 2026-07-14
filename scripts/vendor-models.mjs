@@ -8,10 +8,10 @@
 // are all errors. Never downloads unpinned "main" at release time.
 
 import { createHash } from "node:crypto";
-import { createReadStream, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFile, writeFile, mkdir, copyFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, "..");

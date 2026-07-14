@@ -15,7 +15,7 @@ describe("merge-line-parts", () => {
   });
 
   it("deduplicates overlapping boundary characters", () => {
-    expect(mergeLineParts(["hello", "lorld"], 2)).toBe("hellold");
+    expect(mergeLineParts(["hello", "lorld"], 2)).toBe("hellorld");
   });
 
   it("does not deduplicate when no overlap", () => {

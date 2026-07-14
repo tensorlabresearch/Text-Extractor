@@ -10,7 +10,6 @@ import { createWorkerClient } from "./lib/ocr/worker-client.js";
 import { createDocumentViewer } from "./lib/ui/document-viewer.js";
 import { createPageOverlay } from "./lib/ui/page-overlay.js";
 import { createPageList } from "./lib/ui/page-list.js";
-import { createResultEditor } from "./lib/ui/result-editor.js";
 import { createProgress } from "./lib/ui/progress.js";
 import { setupFileInput } from "./lib/document/open-file.js";
 
@@ -18,10 +17,9 @@ const state = createState();
 const queue = createJobQueue();
 const workerClient = createWorkerClient();
 
-const viewer = createDocumentViewer(document.getElementById("page-canvas"));
-const overlay = createPageOverlay(document.getElementById("overlay"));
+createDocumentViewer(document.getElementById("page-canvas"));
+createPageOverlay(document.getElementById("overlay"));
 const pageList = createPageList(document.getElementById("pages"));
-const resultEditor = createResultEditor(document.getElementById("lines"));
 const progress = createProgress(
   document.getElementById("progress-text"),
   document.getElementById("progress-bar")

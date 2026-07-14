@@ -3,7 +3,7 @@
 
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFile, writeFile, readdir } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

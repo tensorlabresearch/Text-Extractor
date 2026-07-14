@@ -16,7 +16,7 @@ export class TrocrRecognizer extends RecognizerBackend {
    * @param {string} options.modelPath - Extension URL to model directory.
    * @param {"auto"|"webgpu"|"wasm"} [options.engine]
    */
-  async load(options) {
+  async load(_options) {
     // TODO: implement in Phase 4
     //
     // import { env, pipeline } from "../vendor/transformers/transformers.js";

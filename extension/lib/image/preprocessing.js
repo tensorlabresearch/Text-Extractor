@@ -15,7 +15,7 @@ export const DETECTOR_PREPROCESS = Object.freeze({
  * @param {ImageData|ImageBitmap} image
  * @returns {{ tensor: Float32Array, width: number, height: number, scale: number }}
  */
-export function preprocessForDetector(image) {
+export function preprocessForDetector(_image) {
   // TODO: implement in Phase 3
   throw new Error("Detector preprocessing not yet implemented — Phase 3");
 }

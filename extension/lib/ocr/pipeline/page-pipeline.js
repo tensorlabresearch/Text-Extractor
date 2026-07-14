@@ -14,11 +14,11 @@
  * @param {AbortSignal} [params.signal]
  * @returns {Promise<import("../protocol.js").PageResult>}
  */
-export async function runPagePipeline({ detector, recognizer, image, options = {}, signal }) {
+export async function runPagePipeline({ detector, _recognizer, image, options = {}, signal }) {
   if (signal?.aborted) throw new Error("Aborted");
 
   // Stage 2: Detect text regions
-  const regions = await detector.detect(image, options, signal);
+  const _regions = await detector.detect(image, options, signal);
   if (signal?.aborted) throw new Error("Aborted");
 
   // Stage 5: Crop and perspective correction

@@ -23,7 +23,7 @@ export const DB_DEFAULTS = Object.freeze({
  * @param {Object} [params]
  * @returns {Array<{ polygon: Array<[number, number]>, score: number, boundingBox: [number, number, number, number] }>}
  */
-export function dbPostprocess(probMap, width, height, sourceWidth, sourceHeight, params = {}) {
+export function dbPostprocess(probMap, width, height, sourceWidth, sourceHeight, _params = {}) {
   // TODO: implement in Phase 3
   // 1. Threshold the probability map
   // 2. Find connected components or contours

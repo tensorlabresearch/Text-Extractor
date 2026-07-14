@@ -17,7 +17,7 @@ export function createPdfController() {
      * @param {string} [password]
      * @returns {Promise<{ pageCount: number }>}
      */
-    async open(bytes, password) {
+    async open(_bytes, _password) {
       // TODO: implement with vendored PDF.js in Phase 2
       throw new Error("PDF.js not yet vendored — Phase 2");
     },

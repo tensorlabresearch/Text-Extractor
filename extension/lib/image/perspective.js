@@ -7,7 +7,7 @@
  * @param {number} padRatio - Padding as fraction of line height (0.08–0.12)
  * @returns {Promise<ImageBitmap>}
  */
-export async function perspectiveCrop(source, polygon, padRatio = 0.1) {
+export async function perspectiveCrop(source, polygon, _padRatio = 0.1) {
   // TODO: implement in Phase 4
   throw new Error("Perspective crop not yet implemented — Phase 4");
 }
