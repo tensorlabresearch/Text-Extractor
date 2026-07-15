@@ -1,6 +1,5 @@
 import sharp from "sharp";
 import { mkdirSync } from "fs";
-import { dirname } from "path";
 
 const OUT_DIR = new URL("../extension/icons/", import.meta.url).pathname;
 
